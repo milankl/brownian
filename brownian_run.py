@@ -15,29 +15,29 @@ elastic collision
     v2new = v2 + 2*m1/(m1+m2)*vr.dot(vr)/xr.dot(xr)*xr
 
 detect collision - adaptive timestep
-
+    
     s   particle size (radius)
     |xr|**2 + 2*(xr.dot(vr))*t + |vr|**2*t**2 = 4s**2
-
-solve for tmin, but tmin > 0
+    
+    solve for tmin, but tmin > 0
 
 collision with wall
 
     t = (L - x0)/u, (H - y0)/v, -x0/u, -y0/v
-
-find smallest t.
+    
+    find smallest t.
 
 collision with wall with gravity
 
     t = v/g +- sqrt((v/g)**2 + 2/g*(y0-H))
-
+    
 """
 
 # parameters
-N = 500           # number of particles
-Nt = 30000       # number of time steps       
+N = 50           # number of particles
+Nt = 1000       # number of time steps       
 dtmax = 1e-1    # maximum time step
-g = 0          # gravity acceleration     
+g = 0.          # gravity acceleration     
 s = 1e-2          # size of particles
 ef = 1e-15      # tolerance error around boundaries
 
@@ -47,7 +47,7 @@ periodicy = 0
 
 # domain
 L = 2.
-H = 2.
+H = 1.
 ez = np.array([0,1])
 
 # initial conditions
@@ -63,11 +63,9 @@ r[0,Nhalf:] += (L*0.5)
 
 uv = np.random.rand(2,N)-.5
 
-r[:,-1] = [L/2,H/2]
-uv[:,-1] = 0
-
-alive = np.ones(N)
-alive[-1] = 0
+# storing
+path = '/Users/milan/Documents/GitHub/brownian/data'
+fstore = 4     # storing frequency
 
 ## difference operator
 def Dmat(N):
@@ -176,7 +174,9 @@ def timestep(x,y,u,v,col_nm):
 
 def pq(p,q):
     """ Solves a quadratic equation of the form
-        x**2 + p*x + q = 0. Fills nans and negatives with dtmax."""
+        x**2 + p*x + q = 0. Fills nans and negatives with dtmax.
+        Also eliminate tiny (i.e. < ef) dt estimates and replace them with
+        dtmax to avoid tiny timesteps."""
     x = -p/2. + np.outer(np.array([1.,-1]),np.sqrt((p/2.)**2 - q))
     x[np.logical_or(np.isnan(x),x < ef)] = dtmax
     return x.min(axis=0)
@@ -206,9 +206,6 @@ def time_to_particle_collision(x,y,u,v):
 # collision indices n,m indicating which particles did collide
 col_nm = np.empty(0)
 
-fstore = 40     # storing frequency
-istore = 0
-
 # preallocate storage matrix
 R = np.empty((2,N,int(Nt/fstore)+1))
 tvec = np.empty((int(Nt/fstore)+1))
@@ -216,8 +213,9 @@ dt = 0.
 t = 0.
 
 # store initial conditions
-R[:,:,0] = r
-tvec[0] = t 
+istore = 0  
+R[:,:,istore] = r
+tvec[istore] = t 
 
 for i in range(Nt-1):
 
@@ -228,11 +226,7 @@ for i in range(Nt-1):
 
     if len(col_nm):
         n,m = col_nm
-        if (alive[m] == 0) or (alive[n] == 0):
-            alive[[n,m]] = 0
-            uv[:,n],uv[:,m] = 0,0
-        else:
-            uv[:,n],uv[:,m] = mom_exchange(r[:,n],r[:,m],uv[:,n],uv[:,m])
+        uv[:,n],uv[:,m] = mom_exchange(r[:,n],r[:,m],uv[:,n],uv[:,m])
     else:
         r,uv = wallcollision(*r,*uv)
     
@@ -247,7 +241,6 @@ for i in range(Nt-1):
         tvec[istore] = t 
 
 # storage in file
-path = '/Users/milan/Dropbox/phd/maths/brownian/data/'
 allfiles = glob.glob(path+'dat*.npy')
 if allfiles:
     fileid = '%03i' % (max([int(file[-7:-4]) for file in allfiles])+1)
