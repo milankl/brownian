@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 from scipy import sparse
 
 # load data
-runid = 1
-path = '/Users/milan/git/brownian/'
+runid = 2
+#path = '/Users/milan/git/brownian/'
+path = '/Users/milan/Dropbox/phd/maths/brownian/'
 d = np.load(path+'data/dat%03i.npy' % runid).all()
 d['Nhalf'] = int(d['N']/2)
 

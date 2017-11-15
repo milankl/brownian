@@ -34,10 +34,10 @@ collision with wall with gravity
 """
 
 # parameters
-N = 400           # number of particles
-Nt = 1000       # number of time steps       
+N = 500           # number of particles
+Nt = 15000       # number of time steps       
 dtmax = 1e-1    # maximum time step
-g = 1.          # gravity acceleration     
+g = 0.          # gravity acceleration     
 s = 1e-2          # size of particles
 ef = 1e-15      # tolerance error around boundaries
 
@@ -65,7 +65,7 @@ uv = np.random.rand(2,N)-.5
 
 # storing
 path = '/Users/milan/git/brownian/data/'
-fstore = 100     # storing frequency
+fstore = 20     # storing frequency
 
 ## difference operator
 def Dmat(N):
