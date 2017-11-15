@@ -34,10 +34,10 @@ collision with wall with gravity
 """
 
 # parameters
-N = 50           # number of particles
+N = 400           # number of particles
 Nt = 1000       # number of time steps       
 dtmax = 1e-1    # maximum time step
-g = 0.          # gravity acceleration     
+g = 1.          # gravity acceleration     
 s = 1e-2          # size of particles
 ef = 1e-15      # tolerance error around boundaries
 
@@ -64,8 +64,8 @@ r[0,Nhalf:] += (L*0.5)
 uv = np.random.rand(2,N)-.5
 
 # storing
-path = '/Users/milan/Documents/GitHub/brownian/data'
-fstore = 4     # storing frequency
+path = '/Users/milan/git/brownian/data/'
+fstore = 100     # storing frequency
 
 ## difference operator
 def Dmat(N):
@@ -246,5 +246,5 @@ if allfiles:
     fileid = '%03i' % (max([int(file[-7:-4]) for file in allfiles])+1)
 else:
     fileid = '000'
-np.save(path+'/dat'+fileid+'.npy',dict(R=R,t=tvec,s=s,L=L,H=H,g=g,N=N,Nt=Nt))
+np.save(path+'dat'+fileid+'.npy',dict(R=R,t=tvec,s=s,L=L,H=H,g=g,N=N,Nt=Nt))
 print('Data saved in dat'+fileid)
