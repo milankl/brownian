@@ -4,15 +4,14 @@ import matplotlib.pyplot as plt
 from scipy import sparse
 
 # load data
-runid = 2
-#path = '/Users/milan/git/brownian/'
-path = '/Users/milan/Dropbox/phd/maths/brownian/'
+runid = 0
+path = '' # use relative path
 d = np.load(path+'data/dat%03i.npy' % runid).all()
 d['Nhalf'] = int(d['N']/2)
 
 
 ## plotting
-for i in range(d['R'].shape[-1]):
+for i in range(d['R'].shape[-1]): # loop over timesteps
 
     if i == 0:
         fig,ax = plt.subplots(1,1,figsize=(4*d['L'],4*d['H']))
@@ -22,11 +21,11 @@ for i in range(d['R'].shape[-1]):
         ax.set_xlim(0,d['L'])
         ax.set_ylim(0,d['H'])
         ax.set_xticks([])
-        ax.set_yticks([])        
+        ax.set_yticks([])
         ax.set_xlabel('x')
-        ax.set_ylabel('y')                
+        ax.set_ylabel('y')
         plt.tight_layout()
-        
+
     else:
         Q.set_offsets(d['R'][:,:,i].T)
         plt.pause(0.0001)
