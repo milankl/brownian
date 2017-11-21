@@ -5,7 +5,7 @@ from scipy import sparse
 
 # load data
 runid = 0
-path = '/Users/milan/Dropbox/phd/maths/brownian/data/'
+path = 'data/'
 d = np.load(path+'dat%03i.npy' % runid).all()
 d['Nhalf'] = int(d['N']/2)
 
@@ -24,7 +24,7 @@ for i in range(d['R'].shape[-1]):
         ax.set_xticks([])
         ax.set_yticks([])
         plt.tight_layout()
-        plt.pause(6)
+        plt.pause(1)
     else:
         Q.set_offsets(d['R'][:,:,i].T)
         plt.pause(0.0001)

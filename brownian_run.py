@@ -74,8 +74,8 @@ alive[-1] = 0   # initially only the seed particle is dead
 
 # storing options
 storing = 1     # 1 for storing 0 for no storing
-path = '/Users/milan/Dropbox/phd/maths/brownian/data/'
-fstore = 40     # storing frequency
+path = 'data/'  # relative path
+fstore = 5     # storing frequency
 
 ## difference operator
 def Dmat(N):
@@ -256,7 +256,7 @@ for i in range(Nt-1):
         tvec[istore] = t
 
 # storage in file
-if storage:
+if storing:
     allfiles = glob.glob(path+'dat*.npy')
     if allfiles:
         fileid = '%03i' % (max([int(file[-7:-4]) for file in allfiles])+1)
